@@ -14,7 +14,7 @@ file_name = 'edf_test'; % name of the created EDF file
 
 %% Importing data and Header info ***********************
 
-[data_write, SmpFrq] = DummyData();
+[data_write, SmpFrq] = DummyData();      % import randomly generated test data from DummyData.m
 Header_w = HeaderInfo();
 
 %% Defining variables and data ***********************
