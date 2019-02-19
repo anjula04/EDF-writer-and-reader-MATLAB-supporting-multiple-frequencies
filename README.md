@@ -6,7 +6,7 @@ Writes a file in EDF format (Kemp et. al. 1992).
 - Sampling frequencies should be in an array
 - Header information should be entered separately in the HeaderInfo.m
 ### Limitations
-- Sampling frequency is assumed >=1Hz with the default 'samples per data block' defined to samples per second. Therefore, sampling frequencies <1Hz will not be meaningfull.
+- Samples per data record of > 61440 is not supported (Kemp et. al. 1992).
 - Data and time formats are not verified before writing to the file. 
 ## HeaderInfo.m
 All the header information should be entered to this file before executing WriteEDF.m
