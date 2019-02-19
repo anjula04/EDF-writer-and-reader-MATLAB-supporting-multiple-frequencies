@@ -14,23 +14,24 @@ file_name = 'edf_test'; % name of the created EDF file
 
 %% Importing data and Header info ***********************
 
-[data_write, SmpFrq] = DummyData();      % import randomly generated test data from DummyData.m
+[data_write, SmpFrq] = DummyData(); % import randomly generated test data from DummyData.m
 Header_w = HeaderInfo();
 
 %% Defining variables and data ***********************
 
-NfRecords       = length(data_write{1})/SmpFrq(1);
-DuRecord        = 1;                  % in seconds
 NfSignals       = length(data_write); 
-NfBytesHeader   = 256*(1+NfSignals);    
-NfSmpDatRec     = SmpFrq;             % maximum samples per data record is 61440 (Kemp et. al. 1992)
+NfBytesHeader   = 256*(1 + NfSignals); 
 
-% Check for equal number of NfRecords (ensures a recording of a fixed time window)
-for i = 2:NfSignals
-    if NfRecords ~= length(data_write{i})/SmpFrq(i)
-        error('Signals are not of the same duration');
-    end
+% Calculation of the Duration of a record (DuRecord), No. of records (NfRecords)
+[nmtr, dnmt] = rat(SmpFrq);
+DuRecord = max(dnmt);
+NfSmpDatRec = floor(DuRecord * SmpFrq);
+
+% Calculating number of records
+for i = 1:NfSignals
+    NfRecordpSig(i) = ceil(length(data_write{i}) / NfSmpDatRec(i)); % no. of records per signal
 end
+NfRecords = max(NfRecordpSig); 
 
 % Get min/max int and cast to double to avoid computation errors.
 for i = 1:NfSignals
@@ -163,7 +164,12 @@ end
 
 %% Write data to the file**************************
 
-% Data in a cell
+% Padding with intercept of scaling factor (efectively converting to zeroes when reading .edf) to obtain equal samples for each signal
+for i = 1:NfSignals
+    data_write_map{i}(end+1:(NfSmpDatRec(i) * NfRecords)) = c(i);
+end
+
+% Extracting number of samples for each record and writing on to the file
 for i = 1:NfRecords 
     for j = 1:NfSignals
         temp_data = data_write_map{j}((NfSmpDatRec(j)*(i-1)+1) : NfSmpDatRec(j)*i); % rearranging data to [1 1 1 2 2 2 3 3 3 1 1 1 2 2 2 3 3 3]
