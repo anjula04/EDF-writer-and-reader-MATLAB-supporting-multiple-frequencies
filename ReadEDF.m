@@ -7,7 +7,7 @@
 %  Header infomation
 %      variable: Header_r
 
-clearvars;
+clearvars; clc;
 
 file_name = 'edf_test'; % name of the file to be read
 
@@ -58,7 +58,7 @@ for i = 1:Header_r.NfSignals
     Header_r.Reserved2(i,:)  = char(fread(fileID,32,'uint8')');
 end
 
-%% Method 1: Extracting data and store in a cell
+%% Extracting data and store in a cell
 
 for i = 1:Header_r.NfDataRecords
     for j = 1:Header_r.NfSignals
@@ -74,3 +74,4 @@ for i = 1:Header_r.NfSignals
 end
 
 fclose(fileID);
+fprintf('''%s.edf'' successfully read.\n',file_name);
