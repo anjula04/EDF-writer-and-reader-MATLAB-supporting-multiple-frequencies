@@ -16,6 +16,7 @@ file_name = 'edf_test'; % name of the created EDF file
 
 [data_write, SmpFrq] = DummyData(); % import randomly generated test data from DummyData.m
 Header_w = HeaderInfo();
+% SmpFrq = Header_w.SmpFreq;  % uncomment when writing data other than from DummyData.m. Then enter the corresponding sampling frequencies of those data in the HeaderInfo.m
 
 %% Defining variables and data ***********************
 
